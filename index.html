@@ -5,47 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🍑 TimLang — Официальный портал</title>
     <style>
-        /* ===== CSS ПЕРЕМЕННЫЕ ДЛЯ ТЕМ ===== */
         :root {
-            --bg-color: #121212;
-            --surface-color: #1f1f1f;
-            --surface-light: #2a2a2a;
-            --text-color: #eee;
-            --text-secondary: #aaa;
-            --border-color: #333;
-            --accent: #ff9f43;
-            --input-bg: #121212;
-            --shadow: 0 4px 15px rgba(0,0,0,0.5);
+            --bg-color: #121212; --surface-color: #1f1f1f; --surface-light: #2a2a2a;
+            --text-color: #eee; --text-secondary: #aaa; --border-color: #333;
+            --accent: #ff9f43; --input-bg: #121212; --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         .light-theme {
-            --bg-color: #f4f7f6;
-            --surface-color: #ffffff;
-            --surface-light: #e9ecef;
-            --text-color: #1e1e1e;
-            --text-secondary: #555;
-            --border-color: #d1d5db;
-            --accent: #e67e22;
-            --input-bg: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --bg-color: #f4f7f6; --surface-color: #ffffff; --surface-light: #e9ecef;
+            --text-color: #1e1e1e; --text-secondary: #555; --border-color: #d1d5db;
+            --accent: #e67e22; --input-bg: #ffffff; --shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        
         * { box-sizing: border-box; transition: background 0.3s, color 0.3s, border 0.3s; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         a { text-decoration: none; color: inherit; }
-        
-        /* ===== ШАПКА ===== */
         .navbar { background: var(--surface-color); border-bottom: 2px solid var(--accent); display: flex; align-items: center; padding: 0 20px; height: 60px; flex-shrink: 0; }
         .navbar .logo { font-size: 24px; font-weight: bold; color: var(--accent); margin-right: 30px; display: flex; align-items: center; gap: 8px; }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links button { background: none; border: none; color: var(--text-secondary); font-size: 16px; font-weight: bold; cursor: pointer; padding: 10px 15px; border-bottom: 3px solid transparent; }
+        .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
+        .nav-links button { background: none; border: none; color: var(--text-secondary); font-size: 16px; font-weight: bold; cursor: pointer; padding: 10px 0; border-bottom: 3px solid transparent; }
         .nav-links button:hover { color: var(--text-color); }
         .nav-links button.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
         .spacer { flex: 1; }
-        
-        /* Переключатель темы */
         .theme-switch { background: var(--surface-light); border: none; border-radius: 20px; padding: 5px 10px; cursor: pointer; color: var(--text-color); margin-right: 15px; font-size: 16px; display: flex; align-items: center; gap: 5px; }
-        
-        /* Кнопка Скачать */
         .dropdown { position: relative; display: inline-block; }
         .dropbtn { background: var(--accent); color: #121212; border: none; padding: 8px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 14px; }
         .dropbtn:hover { filter: brightness(0.9); }
@@ -53,14 +33,11 @@
         .dropdown-content a { color: var(--text-secondary); padding: 12px 16px; display: block; border-bottom: 1px solid var(--border-color); }
         .dropdown-content a:hover { background: var(--surface-light); color: var(--text-color); }
         .dropdown:hover .dropdown-content { display: block; }
-
-        /* ===== КОНТЕЙНЕР ВКЛАДОК ===== */
         .main-container { flex: 1; overflow: hidden; position: relative; }
         .tab-content { display: none; height: 100%; overflow-y: auto; padding: 20px; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ===== ГЛАВНАЯ ===== */
         .landing { max-width: 800px; margin: 0 auto; text-align: center; padding-top: 40px; }
         .landing h1 { font-size: 48px; color: var(--accent); }
         .landing .subtitle { font-size: 20px; color: var(--text-secondary); margin-bottom: 30px; }
@@ -73,22 +50,18 @@
         .card h3 { color: var(--accent); margin: 0 0 10px 0; }
         .card p { color: var(--text-secondary); font-size: 14px; margin: 0; }
 
-        /* ===== TimIDE & TimLearning ===== */
-        .ide-container, .learn-container { display: flex; flex-direction: column; height: 100%; gap: 15px; }
-        .ide-tools, .learn-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .ide-tools button, .learn-tools button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: #fff; }
-        .btn-run { background: #28a745; }
-        .btn-run:hover { background: #218838; }
-        .btn-clear { background: #dc3545; }
-        .btn-clear:hover { background: #c82333; }
-        .btn-nav { background: #6c757d; }
-        .btn-nav:hover { background: #5a6268; }
-        
         .editor-row { display: flex; gap: 10px; flex: 1; min-height: 0; }
-        textarea#codeArea, textarea#learnCodeArea { flex: 1; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px; font-size: 15px; resize: none; font-family: 'Courier New', monospace; outline: none; border-radius: 8px; line-height: 1.5; }
+        .code-editor { flex: 1; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px; font-size: 15px; font-family: 'Courier New', monospace; outline: none; border-radius: 8px; line-height: 1.5; overflow: auto; white-space: pre-wrap; word-wrap: break-word; }
+        .code-editor:focus { border-color: var(--accent); }
+        .hl-keyword { color: #569cd6; font-weight: bold; } .hl-builtin { color: #c586c0; }
+        .hl-string { color: #ce9178; } .hl-number { color: #b5cea8; } .hl-comment { color: #6a9955; } .hl-variable { color: #9cdcfe; }
         .output { flex: 1; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px; font-size: 14px; overflow-y: auto; white-space: pre-wrap; border-radius: 8px; font-family: 'Courier New', monospace; }
-
-        /* ===== TimLearning ===== */
+        .ide-tools, .learn-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 5px 0; }
+        .ide-tools button, .learn-tools button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: #fff; }
+        .btn-run { background: #28a745; } .btn-run:hover { background: #218838; }
+        .btn-clear { background: #dc3545; } .btn-clear:hover { background: #c82333; }
+        .btn-nav { background: #6c757d; } .btn-nav:hover { background: #5a6268; }
+        
         .learn-layout { display: flex; height: 100%; gap: 15px; }
         .learn-sidebar { width: 280px; background: var(--surface-color); border-right: 2px solid var(--border-color); overflow-y: auto; padding: 10px; border-radius: 8px; flex-shrink: 0; }
         .learn-sidebar h3 { color: var(--accent); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 0; }
@@ -96,23 +69,28 @@
         .lesson-item:hover { background: var(--border-color); }
         .lesson-item.active { border-left: 3px solid var(--accent); color: var(--accent); }
         .lesson-item .desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: block; }
-        
         .learn-workspace { flex: 1; display: flex; flex-direction: column; gap: 10px; }
         .lesson-info { background: var(--surface-color); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent); box-shadow: var(--shadow); }
         .lesson-info h2 { margin: 0 0 5px 0; font-size: 18px; }
         .lesson-info p { margin: 0; color: var(--text-secondary); font-size: 14px; }
         .lesson-info .task { background: var(--surface-light); padding: 8px; border-radius: 4px; margin-top: 8px; color: var(--accent); font-size: 14px; border: 1px solid var(--border-color); }
 
-        /* ===== СКРОЛЛБАРЫ ===== */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--surface-color); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+        .gui-container { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .gui-example { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; width: 100%; max-width: 600px; text-align: center; box-shadow: var(--shadow); }
+        .gui-example h2 { color: var(--accent); }
+        .gui-window { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-top: 15px; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        .gui-btn { background: var(--accent); color: #121212; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .gui-btn:hover { filter: brightness(0.9); }
+        .gui-input { background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; width: 80%; }
+        .gui-label { color: var(--text-color); font-size: 16px; }
     </style>
 </head>
 <body>
-
-    <!-- ШАПКА -->
     <nav class="navbar">
         <div class="logo">🍑 TimLang</div>
         <div class="nav-links">
@@ -120,105 +98,108 @@
             <button onclick="switchTab('ide')">TimIDE</button>
             <button onclick="switchTab('learning')">TimLearning</button>
             <button onclick="switchTab('framework')">TimFramework</button>
+            <button onclick="switchTab('gui')">TGUI Online</button>
         </div>
         <div class="spacer"></div>
         <button class="theme-switch" onclick="toggleTheme()">🌙 Тема</button>
         <div class="dropdown">
             <button class="dropbtn">⬇ Скачать</button>
             <div class="dropdown-content">
-                <a href="https://github.com/scpfondation1809125-lgmt/TIMIDE/raw/main/timide.exe">💻 TimIDE (Windows .exe)</a>
-                <a href="#">📚 TimLearning (Обучающий курс)</a>
-                <a href="#">🧩 TimFramework (Библиотека)</a>
+                <a href="https://github.com/scrfondation1809125-LGMT/TIMIDE/raw/main/TimIDE.exe">💻 TimIDE (Windows .exe)</a>
+                <a href="#">📚 TimLearning</a>
+                <a href="#">🧩 TimFramework</a>
             </div>
         </div>
     </nav>
 
-    <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
     <div class="main-container">
-        
-        <!-- ГЛАВНАЯ -->
         <div id="tab-home" class="tab-content active">
             <div class="landing">
                 <h1>🍑 TimLang</h1>
                 <div class="subtitle">Современный язык программирования для всех!</div>
-                <p>TimLang — это язык с <b>точными математическими вычислениями</b> (0.1 + 0.2 = 0.3), понятным синтаксисом с поддержкой русского языка и мощной средой разработки.</p>
+                <p>TimLang — это язык с <b>точной математикой</b> (0.1 + 0.2 = 0.3), встроенным GUI и простым синтаксисом.</p>
                 <button class="big-download">⬇ Скачать TimLang v1.0</button>
                 <div class="cards">
                     <div class="card" onclick="switchTab('ide')"><h3>💻 TimIDE</h3><p>Напишите и запустите код прямо в браузере!</p></div>
-                    <div class="card" onclick="switchTab('learning')"><h3>📚 TimLearning</h3><p>Изучайте язык с нуля по интерактивным урокам.</p></div>
-                    <div class="card" onclick="switchTab('framework')"><h3>🧩 TimFramework</h3><p>Библиотека готовых решений для ваших проектов.</p></div>
+                    <div class="card" onclick="switchTab('learning')"><h3>📚 TimLearning</h3><p>Изучайте язык с нуля.</p></div>
+                    <div class="card" onclick="switchTab('gui')"><h3>🧩 TGUI Online</h3><p>Создавайте графические интерфейсы прямо в коде!</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- TimIDE -->
         <div id="tab-ide" class="tab-content">
-            <div class="ide-container">
-                <div class="ide-tools">
-                    <button class="btn-run" onclick="runCode('codeArea', 'outputArea')">▶ Запустить</button>
-                    <button class="btn-clear" onclick="clearOutput('outputArea')">Очистить</button>
-                    <span style="color:var(--text-secondary); font-size:14px;">🍑 Пиши код на TimLang прямо здесь!</span>
-                </div>
-                <div class="editor-row">
-                    <textarea id="codeArea" spellcheck="false" placeholder="Напишите код на TimLang...">say("Привет, мир!")
-set x = 10
-say("x =", x)</textarea>
-                    <div class="output" id="outputArea">⏳ Готов к работе...</div>
-                </div>
+            <div class="ide-tools">
+                <button class="btn-run" onclick="runCode('codeArea', 'outputArea')">▶ Запустить</button>
+                <button class="btn-clear" onclick="clearOutput('outputArea')">Очистить</button>
+                <span style="color:var(--text-secondary); font-size:14px;">🍑 Пиши код на TimLang прямо здесь!</span>
+            </div>
+            <div class="editor-row">
+                <div id="codeArea" class="code-editor" contenteditable="true" spellcheck="false">say("Hello, World!")</div>
+                <div class="output" id="outputArea">⏳ Ready...</div>
             </div>
         </div>
 
-        <!-- TimLearning -->
         <div id="tab-learning" class="tab-content">
             <div class="learn-layout">
-                <div class="learn-sidebar" id="lessonList">
-                    <h3>📚 Уроки</h3>
-                    <div id="lessonItems"></div>
-                </div>
+                <div class="learn-sidebar" id="lessonList"><h3>📚 Lessons</h3><div id="lessonItems"></div></div>
                 <div class="learn-workspace">
-                    <div class="lesson-info" id="lessonInfo">
-                        <h2>Добро пожаловать!</h2>
-                        <p>Выберите урок слева, чтобы начать изучение TimLang.</p>
-                    </div>
+                    <div class="lesson-info" id="lessonInfo"><h2>Welcome!</h2><p>Select a lesson to start.</p></div>
                     <div class="learn-tools">
-                        <button class="btn-run" onclick="runCode('learnCodeArea', 'learnOutputArea')">▶ Запустить (Урок)</button>
-                        <button class="btn-clear" onclick="clearOutput('learnOutputArea')">Очистить</button>
+                        <button class="btn-run" onclick="runCode('learnCodeArea', 'learnOutputArea')">▶ Run</button>
+                        <button class="btn-clear" onclick="clearOutput('learnOutputArea')">Clear</button>
                         <div style="flex:1;"></div>
-                        <button class="btn-nav" onclick="prevLesson()">◀ Назад</button>
-                        <button class="btn-nav" onclick="nextLesson()">Вперёд ▶</button>
+                        <button class="btn-nav" onclick="prevLesson()">◀ Back</button>
+                        <button class="btn-nav" onclick="nextLesson()">Next ▶</button>
                     </div>
                     <div class="editor-row">
-                        <textarea id="learnCodeArea" spellcheck="false"></textarea>
-                        <div class="output" id="learnOutputArea">⏳ Готов к работе...</div>
+                        <div id="learnCodeArea" class="code-editor" contenteditable="true" spellcheck="false"></div>
+                        <div class="output" id="learnOutputArea">⏳ Ready...</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TimFramework -->
         <div id="tab-framework" class="tab-content">
             <div class="landing" style="max-width: 1000px;">
                 <h1>🧩 TimFramework</h1>
-                <div class="subtitle">Готовые библиотеки и шаблоны для твоих проектов!</div>
+                <div class="subtitle">Готовые библиотеки и шаблоны!</div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align: left; margin-top: 30px;">
                     <div class="card" style="width: auto; cursor: default;">
-                        <h3>📦 Математика</h3>
-                        <p style="font-size: 13px;">Функции для работы с числами, проценты, калькулятор.</p>
-                        <pre style="background: var(--input-bg); padding: 10px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">fn проц(число, процент) { return число * процент / 100 }</pre>
-                        <button class="btn-run" style="margin-top: 10px;" onclick="copyToIDE('fn проц(число, процент) { return число * процент / 100 }')">📋 Копировать в IDE</button>
+                        <h3>📦 Math (GID)</h3>
+                        <p style="font-size:13px;">Синус, косинус, случайные числа, степень.</p>
+                        <pre style="background: var(--input-bg); padding:10px; border-radius:6px; font-size:12px; color:var(--text-secondary);">fn power(x, n) { return x ^ n }
+say(power(2, 3))</pre>
+                        <button class="btn-run" style="margin-top:10px;" onclick="copyToIDE('fn power(x, n) { return x ^ n }\nsay(power(2, 3))')">📋 Copy & Run</button>
                     </div>
                     <div class="card" style="width: auto; cursor: default;">
-                        <h3>📂 Файлы</h3>
-                        <p style="font-size: 13px;">Шаблоны для чтения и записи данных.</p>
-                        <pre style="background: var(--input-bg); padding: 10px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">fn сохранить(имя, данные) { say("Файл сохранён!") }</pre>
-                        <button class="btn-run" style="margin-top: 10px;" onclick="copyToIDE('fn сохранить(имя, данные) { say(\"Файл сохранён!\") }')">📋 Копировать в IDE</button>
+                        <h3>📂 Foundation (Input)</h3>
+                        <p style="font-size:13px;">Ввод текста через всплывающее окно.</p>
+                        <pre style="background: var(--input-bg); padding:10px; border-radius:6px; font-size:12px; color:var(--text-secondary);">set name = ask("Enter your name:")
+say("Hello, ", name)</pre>
+                        <button class="btn-run" style="margin-top:10px;" onclick="copyToIDE('set name = ask(\"Enter your name:\")\nsay(\"Hello, \", name)')">📋 Copy & Run</button>
                     </div>
                     <div class="card" style="width: auto; cursor: default;">
-                        <h3>🎮 Игры</h3>
-                        <p style="font-size: 13px;">Заготовка для игры «Угадай число».</p>
-                        <pre style="background: var(--input-bg); padding: 10px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">set секрет = 42
-if секрет == 42 { say("Ты угадал!") }</pre>
-                        <button class="btn-run" style="margin-top: 10px;" onclick="copyToIDE('set секрет = 42\nif секрет == 42 { say(\"Ты угадал!\") }')">📋 Копировать в IDE</button>
+                        <h3>🎮 TGUI Demo</h3>
+                        <p style="font-size:13px;">Создание окна с кнопкой и текстом.</p>
+                        <pre style="background: var(--input-bg); padding:10px; border-radius:6px; font-size:12px; color:var(--text-secondary);">window("My App") {
+    label("Hello from TimLang!")
+    button("Click me", { say("Button clicked!") })
+}</pre>
+                        <button class="btn-run" style="margin-top:10px;" onclick="copyToIDE('window(\"My App\") {\n    label(\"Hello from TimLang!\")\n    button(\"Click me\", { say(\"Button clicked!\") })\n}')">📋 Copy & Run</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-gui" class="tab-content">
+            <div class="gui-container">
+                <h1>🧩 TGUI Online</h1>
+                <div class="subtitle" style="color:var(--text-secondary); margin-bottom: 20px;">Создавай графические интерфейсы прямо из кода TimLang!</div>
+                <div class="gui-example">
+                    <h2>🖥️ Результат выполнения GUI</h2>
+                    <p style="color:var(--text-secondary);">Код с `window()` из IDE будет рисовать элементы прямо здесь:</p>
+                    <div class="gui-window" id="guiContainer">
+                        <div class="gui-label">Запустите код с `window()` в TimIDE</div>
                     </div>
                 </div>
             </div>
@@ -226,18 +207,11 @@ if секрет == 42 { say("Ты угадал!") }</pre>
     </div>
 
     <script>
-        // ============================
-        // 1. ПЕРЕКЛЮЧЕНИЕ ТЕМ
-        // ============================
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
             const btn = document.querySelector('.theme-switch');
             btn.innerHTML = document.body.classList.contains('light-theme') ? '☀️ Тема' : '🌙 Тема';
         }
-
-        // ============================
-        // 2. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
-        // ============================
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
@@ -246,21 +220,40 @@ if секрет == 42 { say("Ты угадал!") }</pre>
                 if(btn.innerText.toLowerCase().includes(tabId === 'home' ? 'главная' : tabId)) btn.classList.add('active');
             });
         }
+        function highlight(editorId) {
+            const el = document.getElementById(editorId); let text = el.innerText;
+            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            let strings = [];
+            text = text.replace(/(\"[^\"\\]*(?:\\.[^\"\\]*)*\")/g, function(m) { strings.push(m); return `__STR${strings.length-1}__`; });
+            text = text.replace(/\b(\d+\.?\d*)\b/g, '<span class="hl-number">$1</span>');
+            const keywords = ['fn', 'if', 'else', 'loop', 'return', 'in', 'set', 'mut', 'window', 'label', 'button', 'ask'];
+            keywords.forEach(kw => { const regex = new RegExp('\\b(' + kw + ')\\b', 'g'); text = text.replace(regex, '<span class="hl-keyword">$1</span>'); });
+            text = text.replace(/\b(say)\b/g, '<span class="hl-builtin">$1</span>');
+            text = text.replace(/(\/\/.*)/g, '<span class="hl-comment">$1</span>');
+            text = text.replace(/__STR(\d+)__/g, function(m, idx) { return strings[idx]; });
+            el.innerHTML = text; placeCaretAtEnd(el);
+        }
+        function placeCaretAtEnd(el) {
+            el.focus();
+            if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+                var range = document.createRange(); range.selectNodeContents(el); range.collapse(false);
+                var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+            }
+        }
+        function setupEditor(editorId) {
+            const el = document.getElementById(editorId);
+            el.addEventListener('input', function() { highlight(editorId); });
+            el.addEventListener('keydown', function(e) { if (e.key === 'Tab') { e.preventDefault(); document.execCommand('insertHTML', false, '    '); } });
+            setTimeout(() => highlight(editorId), 100);
+        }
+        setupEditor('codeArea'); setupEditor('learnCodeArea');
 
-        // ============================
-        // 3. КОПИРОВАНИЕ ИЗ FRAMEWORK В IDE
-        // ============================
         function copyToIDE(code) {
             switchTab('ide');
-            const ta = document.getElementById('codeArea');
-            ta.value = code;
-            clearOutput('outputArea');
+            const el = document.getElementById('codeArea');
+            el.innerText = code; highlight('codeArea'); clearOutput('outputArea');
         }
-
-        // ============================
-        // 4. ЗАПУСК КОДА
-        // ============================
-        function clearOutput(outputId) { document.getElementById(outputId).innerText = "⏳ Готов к работе...\n"; }
+        function clearOutput(outputId) { document.getElementById(outputId).innerText = "⏳ Ready...\n"; }
         function print(outputId, ...args) { document.getElementById(outputId).innerText += args.join(" ") + "\n"; }
 
         class TimLangJS {
@@ -304,19 +297,23 @@ if секрет == 42 { say("Ты угадал!") }</pre>
                         let res = this.execLine(line);
                         if (res && res.return) { result = res.value; break; }
                     }
-                    this.vars = oldVars;
-                    return result;
+                    this.vars = oldVars; return result;
+                }
+                if (expr.startsWith('ask(')) {
+                    let msg = expr.slice(4, -1).trim();
+                    if (msg.startsWith('"') && msg.endsWith('"')) msg = msg.slice(1, -1);
+                    return prompt(msg) || "";
                 }
                 try {
-                    // Точная математика через умножение на 10^10
                     if (expr.includes('+')) {
                         let parts = expr.split('+').map(p => this.evalExpr(p.trim()));
-                        let factor = 10000000000;
-                        let total = 0;
-                        for (let p of parts) {
-                            total += Math.round(p * factor);
-                        }
+                        let factor = 10000000000; let total = 0;
+                        for (let p of parts) total += Math.round(p * factor);
                         return total / factor;
+                    }
+                    if (expr.includes('^')) {
+                        let parts = expr.split('^').map(p => this.evalExpr(p.trim()));
+                        return Math.pow(parts[0], parts[1]);
                     }
                     let env = this.vars; let keys = Object.keys(env); let values = keys.map(k => env[k]);
                     let func = new Function(...keys, `return (${expr})`);
@@ -335,39 +332,42 @@ if секрет == 42 { say("Ты угадал!") }</pre>
                 if (line.startsWith('if ')) { let cond = line.slice(3).trim(); return { type: 'if', cond: this.evalExpr(cond) }; }
                 let loopMatch = line.match(/loop\s+\w+\s+(\w+)\s+in\s+(\d+)\.\.\.(\d+)/);
                 if (loopMatch) { return { type: 'loop', var: loopMatch[1], start: parseInt(loopMatch[2]), end: parseInt(loopMatch[3]) }; }
+                if (line.startsWith('label(')) { let text = this.evalExpr(line.slice(6, -1).trim()); return { type: 'gui_label', text: text }; }
+                if (line.startsWith('button(')) { 
+                    let parts = line.slice(7, -1).trim().match(/(\"[^\"]*\"),\s*\{([^}]*)\}/); 
+                    if(parts) return { type: 'gui_button', text: parts[1].slice(1,-1), code: parts[2].trim() }; 
+                }
                 return null;
             }
             execute(code, outputId) {
-                let lines = this.parse(code); let i = 0;
+                let lines = this.parse(code); let i = 0; 
+                let gui_blocks = [];
                 while (i < lines.length) {
                     let line = lines[i]; let result = this.execLine(line);
                     if (result && result.type === 'say') { print(outputId, ...result.args); }
                     else if (result && result.type === 'return') { return result.value; }
+                    else if (result && result.type === 'gui_label') { gui_blocks.push(result); }
+                    else if (result && result.type === 'gui_button') { gui_blocks.push(result); }
                     else if (result && result.type === 'if') {
                         let cond = result.cond; i++; let trueBlock = []; let depth = 1;
                         while (i < lines.length && depth > 0) {
                             if (lines[i].includes('{')) depth++;
                             if (lines[i].includes('}')) depth--;
-                            if (depth > 0) trueBlock.push(lines[i]);
-                            i++;
+                            if (depth > 0) trueBlock.push(lines[i]); i++;
                         }
                         if (cond) { for (let l of trueBlock) { let r = this.execLine(l); if(r && r.type === 'say') print(outputId, ...r.args); } }
-                        else {
-                            let foundElse = false;
-                            while (i < lines.length && !foundElse) {
-                                if (lines[i].trim().startsWith('else')) {
-                                    i++; depth = 1; let elseBlock = [];
-                                    while (i < lines.length && depth > 0) {
-                                        if (lines[i].includes('{')) depth++;
-                                        if (lines[i].includes('}')) depth--;
-                                        if (depth > 0) elseBlock.push(lines[i]);
-                                        i++;
-                                    }
-                                    for (let l of elseBlock) { let r = this.execLine(l); if(r && r.type === 'say') print(outputId, ...r.args); }
-                                    foundElse = true;
-                                } else { i++; }
-                            }
-                        }
+                        else { let foundElse = false; while (i < lines.length && !foundElse) {
+                            if (lines[i].trim().startsWith('else')) {
+                                i++; depth = 1; let elseBlock = [];
+                                while (i < lines.length && depth > 0) {
+                                    if (lines[i].includes('{')) depth++;
+                                    if (lines[i].includes('}')) depth--;
+                                    if (depth > 0) elseBlock.push(lines[i]); i++;
+                                }
+                                for (let l of elseBlock) { let r = this.execLine(l); if(r && r.type === 'say') print(outputId, ...r.args); }
+                                foundElse = true;
+                            } else { i++; }
+                        } }
                         continue;
                     }
                     else if (result && result.type === 'loop') {
@@ -375,8 +375,7 @@ if секрет == 42 { say("Ты угадал!") }</pre>
                         while (i < lines.length && depth > 0) {
                             if (lines[i].includes('{')) depth++;
                             if (lines[i].includes('}')) depth--;
-                            if (depth > 0) body.push(lines[i]);
-                            i++;
+                            if (depth > 0) body.push(lines[i]); i++;
                         }
                         for (let val = loopInfo.start; val <= loopInfo.end; val++) {
                             this.vars[loopInfo.var] = val;
@@ -386,113 +385,108 @@ if секрет == 42 { say("Ты угадал!") }</pre>
                     }
                     i++;
                 }
+                
+                if (gui_blocks.length > 0) {
+                    switchTab('gui');
+                    const container = document.getElementById('guiContainer');
+                    if (container) {
+                        container.innerHTML = '';
+                        gui_blocks.forEach(b => {
+                            if (b.type === 'gui_label') {
+                                let label = document.createElement('div'); label.className = 'gui-label'; label.innerText = b.text;
+                                container.appendChild(label);
+                            } else if (b.type === 'gui_button') {
+                                let btn = document.createElement('button'); btn.className = 'gui-btn'; btn.innerText = b.text;
+                                btn.onclick = function() { 
+                                    try { 
+                                        let btnInterpreter = new TimLangJS();
+                                        btnInterpreter.vars = this.vars;
+                                        btnInterpreter.execute(b.code, outputId); 
+                                    } catch(e) { print(outputId, "GUI Error:", e.message); }
+                                }.bind(this);
+                                container.appendChild(btn);
+                            }
+                        });
+                    }
+                }
             }
         }
 
         function runCode(codeId, outputId) {
             clearOutput(outputId);
-            let code = document.getElementById(codeId).value;
+            let code = document.getElementById(codeId).innerText;
             let interpreter = new TimLangJS();
-            try {
-                interpreter.execute(code, outputId);
-            } catch (e) {
-                print(outputId, "❌ Ошибка выполнения:", e.message);
-            }
+            try { interpreter.execute(code, outputId); } catch (e) { print(outputId, "❌ Error:", e.message); }
         }
 
-        // ============================
-        // 5. УЛУЧШЕНИЯ РЕДАКТОРА (Tab)
-        // ============================
-        function setupEditor(taId) {
-            const ta = document.getElementById(taId);
-            ta.addEventListener('keydown', function(e) {
-                if (e.key === 'Tab') {
-                    e.preventDefault();
-                    const start = this.selectionStart;
-                    const end = this.selectionEnd;
-                    this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
-                    this.selectionStart = this.selectionEnd = start + 4;
-                }
-            });
-        }
-        setupEditor('codeArea');
-        setupEditor('learnCodeArea');
+        // ===== ФУНКЦИЯ СКАЧИВАНИЯ ПЛАГИНА =====
+        function downloadExampleTpl() {
+            const content = `// my_plugin.tpl
+// Мой первый плагин для TimLang
+// Он добавляет команду "say_hello"
 
-        // ============================
-        // 6. УРОКИ (TimLearning)
-        // ============================
+fn say_hello(name) {
+    say("🍑 Привет от плагина, " + name + "!")
+}`;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my_plugin.tpl';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         const lessons = [
-            { id: 0, title: "Введение", desc: "Первый запуск", theory: "Команда <b>say()</b> выводит текст на экран.", code: `say("Привет, мир!")
-say("Это мой первый код!")`, task: "Измени текст в кавычках на своё имя и запусти!" },
-            { id: 1, title: "Переменные", desc: "Храним данные", theory: "Команда <b>set</b> создаёт переменную.", code: `set имя = "Тим"
-set возраст = 10
-say("Меня зовут", имя)
-say("Мне", возраст, "лет")`, task: "Создай переменную 'город' и выведи её на экран." },
-            { id: 2, title: "Математика", desc: "Считаем точно", theory: "0.1 + 0.2 = 0.3 без ошибок!", code: `set a = 0.1
-set b = 0.2
-set c = a + b
-say("0.1 + 0.2 =", c)`, task: "Посчитай 0.5 + 0.3 и выведи результат." },
-            { id: 3, title: "Функции", desc: "Свои команды", theory: "Ключевое слово <b>fn</b> создаёт функцию.", code: `fn greet(name) {
-    say("Привет, " + name + "!")
-}
-greet("Тим")
-greet("Ричард")`, task: "Добавь вызов greet('Кот') в конце кода." },
-            { id: 4, title: "Циклы", desc: "Повторяем", theory: "Цикл <b>loop</b> выполняет блок кода несколько раз.", code: `loop счетчик i in 1...5 {
-    say("Номер i =", i)
-}`, task: "Измени диапазон на 1...10 и посмотри, что будет." },
-            { id: 5, title: "Условия", desc: "Принимаем решения", theory: "Конструкция <b>if</b> проверяет условие.", code: `set возраст = 18
-if возраст >= 18 {
-    say("Ты совершеннолетний!")
-} else {
-    say("Ты ещё юн!")
-}`, task: "Измени возраст на 16 и запусти." },
-            { id: 6, title: "Массивы", desc: "Списки данных", theory: "Массив — это список значений. Пример: <b>set arr = [1, 2, 3]</b>. Доступ по индексу <b>arr[0]</b>.", code: `set список = ["яблоко", "банан", "апельсин"]
-say("Первый фрукт:", список[0])
-say("Второй фрукт:", список[1])`, task: "Выведи третий фрукт из списка (индекс 2)." },
-            { id: 7, title: "Вложенные циклы", desc: "Цикл внутри цикла", theory: "Внутри одного <b>loop</b> можно использовать другой <b>loop</b> для создания таблиц или узоров.", code: `loop i in 1...3 {
-    say("Строка", i)
-    loop j in 1...2 {
-        say("  Столбец", j)
-    }
-}`, task: "Измени внутренний цикл на j in 1...4 и посмотри, что будет." }
+            { id: 0, title: "Intro", desc: "First run", theory: "The <b>say()</b> command prints text.", code: `say("Hello, World!")`, task: "Change text to your name." },
+            { id: 1, title: "Variables", desc: "Storing data", theory: "The <b>set</b> creates a variable.", code: `set name = "Tim"\nsay("My name is", name)`, task: "Create 'city' and print it." },
+            { id: 2, title: "Math", desc: "Exact math", theory: "0.1 + 0.2 = 0.3", code: `set a = 0.1\nset b = 0.2\nsay(a + b)`, task: "Calculate 0.5 + 0.3." },
+            { id: 3, title: "Functions", desc: "Custom commands", theory: "The <b>fn</b> creates a function.", code: `fn greet(name) { say("Hello, " + name) }\ngreet("Tim")`, task: "Add greet('Cat')." },
+            { id: 4, title: "Loops", desc: "Repeat actions", theory: "The <b>loop</b> repeats code.", code: `loop i in 1...3 { say("Number", i) }`, task: "Change to 1...10." },
+            { id: 5, title: "Conditions", desc: "Decisions", theory: "The <b>if</b> checks a condition.", code: `set age = 18\nif age >= 18 { say("Adult") }`, task: "Change age to 16." },
+            { id: 6, title: "Arrays", desc: "Lists", theory: "Arrays store multiple values.", code: `set fruits = ["apple", "banana"]\nsay(fruits[0])`, task: "Add 'orange' and print it." },
+            { id: 7, title: "Input", desc: "Ask the user", theory: "The <b>ask()</b> command gets text from the user.", code: `set name = ask("What is your name?")\nsay("Hello, ", name)`, task: "Ask for age and print it." },
+            { 
+                id: 8, 
+                title: "Create Plugin (.tpl)", 
+                desc: "Расширяем язык", 
+                theory: "Плагины (файлы <b>.tpl</b>) позволяют добавлять новые функции в TimLang. Они автоматически загружаются из папки <b>plugins/</b> твоего проекта. Напиши свою первую функцию-плагин!", 
+                code: `// my_plugin.tpl
+// Мой первый плагин для TimLang
+// Он добавляет команду "say_hello"
+
+fn say_hello(name) {
+    say("🍑 Привет от плагина, " + name + "!")
+}`,
+                task: "Создай папку plugins в своём проекте, положи туда этот файл и запусти его!",
+                hasDownload: true
+            }
         ];
 
         let currentLessonId = 0;
-
         function renderLessons() {
-            const list = document.getElementById('lessonItems');
-            list.innerHTML = '';
+            const list = document.getElementById('lessonItems'); list.innerHTML = '';
             lessons.forEach((l, idx) => {
                 const div = document.createElement('div');
                 div.className = 'lesson-item' + (idx === currentLessonId ? ' active' : '');
                 div.innerHTML = `<b>${l.title}</b><span class="desc">${l.desc}</span>`;
-                div.onclick = () => loadLesson(idx);
-                list.appendChild(div);
+                div.onclick = () => loadLesson(idx); list.appendChild(div);
             });
         }
-
         function loadLesson(id) {
-            currentLessonId = id;
-            const lesson = lessons[id];
-            renderLessons();
-            document.getElementById('lessonInfo').innerHTML = `
-                <h2>Урок ${id+1}: ${lesson.title}</h2>
-                <p>${lesson.theory}</p>
-                <div class="task">📝 Задание: ${lesson.task}</div>
-            `;
-            document.getElementById('learnCodeArea').value = lesson.code;
-            clearOutput('learnOutputArea');
+            currentLessonId = id; const lesson = lessons[id]; renderLessons();
+            let infoHtml = `<h2>Lesson ${id+1}: ${lesson.title}</h2><p>${lesson.theory}</p><div class="task">📝 Task: ${lesson.task}</div>`;
+            if (lesson.hasDownload) {
+                infoHtml += `<br><button class="btn-run" onclick="downloadExampleTpl()">⬇ Скачать .tpl пример</button>`;
+            }
+            document.getElementById('lessonInfo').innerHTML = infoHtml;
+            const el = document.getElementById('learnCodeArea'); el.innerText = lesson.code; highlight('learnCodeArea'); clearOutput('learnOutputArea');
         }
-
         function prevLesson() { if (currentLessonId > 0) loadLesson(currentLessonId - 1); }
         function nextLesson() { if (currentLessonId < lessons.length - 1) loadLesson(currentLessonId + 1); }
-
-        // ============================
-        // 7. ЗАПУСК
-        // ============================
-        window.onload = function() {
-            loadLesson(0);
-        };
+        window.onload = function() { loadLesson(0); };
     </script>
 </body>
 </html>
