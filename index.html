@@ -5,89 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🍑 TimLang — Официальный портал</title>
     <style>
-        /* ===== БАЗОВЫЕ СТИЛИ ===== */
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #121212; color: #eee; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        /* ===== CSS ПЕРЕМЕННЫЕ ДЛЯ ТЕМ ===== */
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1f1f1f;
+            --surface-light: #2a2a2a;
+            --text-color: #eee;
+            --text-secondary: #aaa;
+            --border-color: #333;
+            --accent: #ff9f43;
+            --input-bg: #121212;
+            --shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .light-theme {
+            --bg-color: #f4f7f6;
+            --surface-color: #ffffff;
+            --surface-light: #e9ecef;
+            --text-color: #1e1e1e;
+            --text-secondary: #555;
+            --border-color: #d1d5db;
+            --accent: #e67e22;
+            --input-bg: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        * { box-sizing: border-box; transition: background 0.3s, color 0.3s, border 0.3s; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         a { text-decoration: none; color: inherit; }
         
-        /* ===== ШАПКА (НАВБАР) ===== */
-        .navbar { background: #1f1f1f; border-bottom: 2px solid #ff9f43; display: flex; align-items: center; padding: 0 20px; height: 60px; flex-shrink: 0; }
-        .navbar .logo { font-size: 24px; font-weight: bold; color: #ff9f43; margin-right: 30px; display: flex; align-items: center; gap: 8px; }
-        
+        /* ===== ШАПКА ===== */
+        .navbar { background: var(--surface-color); border-bottom: 2px solid var(--accent); display: flex; align-items: center; padding: 0 20px; height: 60px; flex-shrink: 0; }
+        .navbar .logo { font-size: 24px; font-weight: bold; color: var(--accent); margin-right: 30px; display: flex; align-items: center; gap: 8px; }
         .nav-links { display: flex; gap: 20px; }
-        .nav-links button { background: none; border: none; color: #888; font-size: 16px; font-weight: bold; cursor: pointer; padding: 10px 15px; transition: 0.2s; border-bottom: 3px solid transparent; }
-        .nav-links button:hover { color: #fff; }
-        .nav-links button.active { color: #ff9f43; border-bottom: 3px solid #ff9f43; }
-        
+        .nav-links button { background: none; border: none; color: var(--text-secondary); font-size: 16px; font-weight: bold; cursor: pointer; padding: 10px 15px; border-bottom: 3px solid transparent; }
+        .nav-links button:hover { color: var(--text-color); }
+        .nav-links button.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
         .spacer { flex: 1; }
         
-        /* Выпадающее меню Скачать */
+        /* Переключатель темы */
+        .theme-switch { background: var(--surface-light); border: none; border-radius: 20px; padding: 5px 10px; cursor: pointer; color: var(--text-color); margin-right: 15px; font-size: 16px; display: flex; align-items: center; gap: 5px; }
+        
+        /* Кнопка Скачать */
         .dropdown { position: relative; display: inline-block; }
-        .dropbtn { background: #ff9f43; color: #121212; border: none; padding: 8px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .dropbtn:hover { background: #e8892c; }
-        .dropdown-content { display: none; position: absolute; right: 0; background: #2d2d2d; min-width: 200px; box-shadow: 0 8px 16px rgba(0,0,0,0.5); border-radius: 6px; z-index: 10; overflow: hidden; }
-        .dropdown-content a { color: #ccc; padding: 12px 16px; display: block; border-bottom: 1px solid #444; transition: 0.2s; }
-        .dropdown-content a:hover { background: #3a3a3a; color: #fff; }
+        .dropbtn { background: var(--accent); color: #121212; border: none; padding: 8px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .dropbtn:hover { filter: brightness(0.9); }
+        .dropdown-content { display: none; position: absolute; right: 0; background: var(--surface-color); min-width: 200px; box-shadow: var(--shadow); border-radius: 6px; z-index: 10; overflow: hidden; border: 1px solid var(--border-color); }
+        .dropdown-content a { color: var(--text-secondary); padding: 12px 16px; display: block; border-bottom: 1px solid var(--border-color); }
+        .dropdown-content a:hover { background: var(--surface-light); color: var(--text-color); }
         .dropdown:hover .dropdown-content { display: block; }
 
-        /* ===== КОНТЕЙНЕР ===== */
+        /* ===== КОНТЕЙНЕР ВКЛАДОК ===== */
         .main-container { flex: 1; overflow: hidden; position: relative; }
         .tab-content { display: none; height: 100%; overflow-y: auto; padding: 20px; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ===== ГЛАВНАЯ СТРАНИЦА ===== */
+        /* ===== ГЛАВНАЯ ===== */
         .landing { max-width: 800px; margin: 0 auto; text-align: center; padding-top: 40px; }
-        .landing h1 { font-size: 48px; color: #ff9f43; margin-bottom: 10px; }
-        .landing .subtitle { font-size: 20px; color: #aaa; margin-bottom: 30px; }
-        .landing p { font-size: 16px; line-height: 1.6; color: #ccc; margin-bottom: 20px; text-align: left; }
-        
-        .big-download { background: #ff9f43; color: #121212; font-size: 28px; font-weight: bold; padding: 20px 40px; border-radius: 12px; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3); margin: 20px 0 40px 0; display: inline-block; }
-        .big-download:hover { transform: scale(1.05); box-shadow: 0 6px 25px rgba(255, 159, 67, 0.5); }
-        
+        .landing h1 { font-size: 48px; color: var(--accent); }
+        .landing .subtitle { font-size: 20px; color: var(--text-secondary); margin-bottom: 30px; }
+        .landing p { font-size: 16px; line-height: 1.6; color: var(--text-secondary); text-align: left; }
+        .big-download { background: var(--accent); color: #121212; font-size: 28px; font-weight: bold; padding: 20px 40px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3); margin: 20px 0 40px 0; display: inline-block; }
+        .big-download:hover { transform: scale(1.02); }
         .cards { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        .card { background: #1f1f1f; border: 1px solid #333; padding: 30px; border-radius: 12px; width: 200px; transition: 0.3s; cursor: pointer; }
-        .card:hover { border-color: #ff9f43; transform: translateY(-5px); }
-        .card h3 { color: #ff9f43; margin: 0 0 10px 0; }
-        .card p { color: #888; font-size: 14px; margin: 0; }
+        .card { background: var(--surface-color); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; width: 200px; cursor: pointer; box-shadow: var(--shadow); }
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .card h3 { color: var(--accent); margin: 0 0 10px 0; }
+        .card p { color: var(--text-secondary); font-size: 14px; margin: 0; }
 
-        /* ===== TimIDE ===== */
-        .ide-container { display: flex; flex-direction: column; height: 100%; gap: 15px; }
-        .ide-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .ide-tools button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-run { background: #28a745; color: #fff; }
+        /* ===== TimIDE & TimLearning ===== */
+        .ide-container, .learn-container { display: flex; flex-direction: column; height: 100%; gap: 15px; }
+        .ide-tools, .learn-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .ide-tools button, .learn-tools button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: #fff; }
+        .btn-run { background: #28a745; }
         .btn-run:hover { background: #218838; }
-        .btn-clear { background: #dc3545; color: #fff; }
+        .btn-clear { background: #dc3545; }
         .btn-clear:hover { background: #c82333; }
-        .ide-editor-row { display: flex; gap: 10px; flex: 1; min-height: 0; }
-        textarea#codeArea { flex: 1; background: #121212; color: #d4d4d4; border: 1px solid #333; padding: 10px; font-size: 15px; resize: none; font-family: 'Courier New', monospace; outline: none; border-radius: 8px; line-height: 1.5; }
-        .output { flex: 1; background: #121212; color: #d4d4d4; border: 1px solid #333; padding: 10px; font-size: 14px; overflow-y: auto; white-space: pre-wrap; border-radius: 8px; font-family: 'Courier New', monospace; }
+        .btn-nav { background: #6c757d; }
+        .btn-nav:hover { background: #5a6268; }
+        
+        .editor-row { display: flex; gap: 10px; flex: 1; min-height: 0; }
+        textarea#codeArea, textarea#learnCodeArea { flex: 1; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px; font-size: 15px; resize: none; font-family: 'Courier New', monospace; outline: none; border-radius: 8px; line-height: 1.5; }
+        .output { flex: 1; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px; font-size: 14px; overflow-y: auto; white-space: pre-wrap; border-radius: 8px; font-family: 'Courier New', monospace; }
 
         /* ===== TimLearning ===== */
-        .learn-container { display: flex; height: 100%; gap: 15px; }
-        .learn-sidebar { width: 280px; background: #1a1a1a; border-right: 2px solid #333; overflow-y: auto; padding: 10px; border-radius: 8px; flex-shrink: 0; }
-        .learn-sidebar h3 { color: #ff9f43; border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 0; }
-        .lesson-item { padding: 12px; margin: 5px 0; background: #252525; border-radius: 6px; cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; }
-        .lesson-item:hover { background: #333; }
-        .lesson-item.active { background: #2a2a2a; border-left: 3px solid #ff9f43; color: #fff; }
-        .lesson-item .desc { font-size: 12px; color: #777; margin-top: 4px; display: block; }
+        .learn-layout { display: flex; height: 100%; gap: 15px; }
+        .learn-sidebar { width: 280px; background: var(--surface-color); border-right: 2px solid var(--border-color); overflow-y: auto; padding: 10px; border-radius: 8px; flex-shrink: 0; }
+        .learn-sidebar h3 { color: var(--accent); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 0; }
+        .lesson-item { padding: 12px; margin: 5px 0; background: var(--surface-light); border-radius: 6px; cursor: pointer; border-left: 3px solid transparent; }
+        .lesson-item:hover { background: var(--border-color); }
+        .lesson-item.active { border-left: 3px solid var(--accent); color: var(--accent); }
+        .lesson-item .desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: block; }
         
         .learn-workspace { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-        .lesson-info { background: #1f1f1f; padding: 15px; border-radius: 8px; border-left: 4px solid #ff9f43; }
-        .lesson-info h2 { margin: 0 0 5px 0; font-size: 18px; color: #fff; }
-        .lesson-info p { margin: 0; color: #aaa; font-size: 14px; }
-        .lesson-info .task { background: #2a2a2a; padding: 8px; border-radius: 4px; margin-top: 8px; color: #f1c40f; font-size: 14px; }
-        .learn-tools { display: flex; gap: 10px; margin-top: 5px; }
-        .learn-tools button { padding: 6px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; background: #6c757d; color: #fff; transition: 0.2s; }
-        .learn-tools button:hover { background: #5a6268; }
-        .learn-code-block { background: #121212; border: 1px solid #333; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; color: #d4d4d4; white-space: pre-wrap; font-size: 14px; flex: 1; overflow-y: auto; }
+        .lesson-info { background: var(--surface-color); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent); box-shadow: var(--shadow); }
+        .lesson-info h2 { margin: 0 0 5px 0; font-size: 18px; }
+        .lesson-info p { margin: 0; color: var(--text-secondary); font-size: 14px; }
+        .lesson-info .task { background: var(--surface-light); padding: 8px; border-radius: 4px; margin-top: 8px; color: var(--accent); font-size: 14px; border: 1px solid var(--border-color); }
 
         /* ===== СКРОЛЛБАРЫ ===== */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1a1a; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #666; }
+        ::-webkit-scrollbar-track { background: var(--surface-color); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
     </style>
 </head>
 <body>
@@ -99,15 +119,16 @@
             <button class="active" onclick="switchTab('home')">ГЛАВНАЯ</button>
             <button onclick="switchTab('ide')">TimIDE</button>
             <button onclick="switchTab('learning')">TimLearning</button>
+            <button onclick="switchTab('framework')">TimFramework</button>
         </div>
         <div class="spacer"></div>
+        <button class="theme-switch" onclick="toggleTheme()">🌙 Тема</button>
         <div class="dropdown">
             <button class="dropbtn">⬇ Скачать</button>
             <div class="dropdown-content">
-                <a href="#">💻 TimIDE (Windows .exe)</a>
+                <a href="https://github.com/scpfondation1809125-lgmt/TIMIDE/raw/main/timide.exe">💻 TimIDE (Windows .exe)</a>
                 <a href="#">📚 TimLearning (Обучающий курс)</a>
                 <a href="#">🧩 TimFramework (Библиотека)</a>
-                <a href="#">📄 Исходный код (GitHub)</a>
             </div>
         </div>
     </nav>
@@ -125,20 +146,20 @@
                 <div class="cards">
                     <div class="card" onclick="switchTab('ide')"><h3>💻 TimIDE</h3><p>Напишите и запустите код прямо в браузере!</p></div>
                     <div class="card" onclick="switchTab('learning')"><h3>📚 TimLearning</h3><p>Изучайте язык с нуля по интерактивным урокам.</p></div>
-                    <div class="card"><h3>🧩 TimFramework</h3><p>Библиотека готовых решений для ваших проектов.</p></div>
+                    <div class="card" onclick="switchTab('framework')"><h3>🧩 TimFramework</h3><p>Библиотека готовых решений для ваших проектов.</p></div>
                 </div>
             </div>
         </div>
 
-        <!-- TimIDE (Чистый редактор) -->
+        <!-- TimIDE -->
         <div id="tab-ide" class="tab-content">
             <div class="ide-container">
                 <div class="ide-tools">
-                    <button class="btn-run" onclick="runCode()">▶ Запустить</button>
-                    <button class="btn-clear" onclick="clearOutput()">Очистить</button>
-                    <span style="color:#aaa; font-size:14px;">🍑 Пиши код на TimLang прямо здесь!</span>
+                    <button class="btn-run" onclick="runCode('codeArea', 'outputArea')">▶ Запустить</button>
+                    <button class="btn-clear" onclick="clearOutput('outputArea')">Очистить</button>
+                    <span style="color:var(--text-secondary); font-size:14px;">🍑 Пиши код на TimLang прямо здесь!</span>
                 </div>
-                <div class="ide-editor-row">
+                <div class="editor-row">
                     <textarea id="codeArea" spellcheck="false" placeholder="Напишите код на TimLang...">say("Привет, мир!")
 set x = 10
 say("x =", x)</textarea>
@@ -147,9 +168,9 @@ say("x =", x)</textarea>
             </div>
         </div>
 
-        <!-- TimLearning (Только уроки) -->
+        <!-- TimLearning -->
         <div id="tab-learning" class="tab-content">
-            <div class="learn-container">
+            <div class="learn-layout">
                 <div class="learn-sidebar" id="lessonList">
                     <h3>📚 Уроки</h3>
                     <div id="lessonItems"></div>
@@ -160,10 +181,45 @@ say("x =", x)</textarea>
                         <p>Выберите урок слева, чтобы начать изучение TimLang.</p>
                     </div>
                     <div class="learn-tools">
-                        <button onclick="prevLesson()">◀ Назад</button>
-                        <button onclick="nextLesson()">Вперёд ▶</button>
+                        <button class="btn-run" onclick="runCode('learnCodeArea', 'learnOutputArea')">▶ Запустить (Урок)</button>
+                        <button class="btn-clear" onclick="clearOutput('learnOutputArea')">Очистить</button>
+                        <div style="flex:1;"></div>
+                        <button class="btn-nav" onclick="prevLesson()">◀ Назад</button>
+                        <button class="btn-nav" onclick="nextLesson()">Вперёд ▶</button>
                     </div>
-                    <div class="learn-code-block" id="learnCodeBlock">// Код появится здесь...</div>
+                    <div class="editor-row">
+                        <textarea id="learnCodeArea" spellcheck="false"></textarea>
+                        <div class="output" id="learnOutputArea">⏳ Готов к работе...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TimFramework -->
+        <div id="tab-framework" class="tab-content">
+            <div class="landing" style="max-width: 1000px;">
+                <h1>🧩 TimFramework</h1>
+                <div class="subtitle">Готовые библиотеки и шаблоны для твоих проектов!</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align: left; margin-top: 30px;">
+                    <div class="card" style="width: auto; cursor: default;">
+                        <h3>📦 Математика</h3>
+                        <p style="font-size: 13px;">Функции для работы с числами, проценты, калькулятор.</p>
+                        <pre style="background: var(--input-bg); padding: 10px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">fn проц(число, процент) { return число * процент / 100 }</pre>
+                        <button class="btn-run" style="margin-top: 10px;" onclick="copyToIDE('fn проц(число, процент) { return число * процент / 100 }')">📋 Копировать в IDE</button>
+                    </div>
+                    <div class="card" style="width: auto; cursor: default;">
+                        <h3>📂 Файлы</h3>
+                        <p style="font-size: 13px;">Шаблоны для чтения и записи данных.</p>
+                        <pre style="background: var(--input-bg); padding: 10px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">fn сохранить(имя, данные) { say("Файл сохранён!") }</pre>
+                        <button class="btn-run" style="margin-top: 10px;" onclick="copyToIDE('fn сохранить(имя, данные) { say(\"Файл сохранён!\") }')">📋 Копировать в IDE</button>
+                    </div>
+                    <div class="card" style="width: auto; cursor: default;">
+                        <h3>🎮 Игры</h3>
+                        <p style="font-size: 13px;">Заготовка для игры «Угадай число».</p>
+                        <pre style="background: var(--input-bg); padding: 10px; border-radius: 6px; font-size: 12px; color: var(--text-secondary); overflow-x: auto;">set секрет = 42
+if секрет == 42 { say("Ты угадал!") }</pre>
+                        <button class="btn-run" style="margin-top: 10px;" onclick="copyToIDE('set секрет = 42\nif секрет == 42 { say(\"Ты угадал!\") }')">📋 Копировать в IDE</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -171,25 +227,41 @@ say("x =", x)</textarea>
 
     <script>
         // ============================
-        // 1. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+        // 1. ПЕРЕКЛЮЧЕНИЕ ТЕМ
+        // ============================
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const btn = document.querySelector('.theme-switch');
+            btn.innerHTML = document.body.classList.contains('light-theme') ? '☀️ Тема' : '🌙 Тема';
+        }
+
+        // ============================
+        // 2. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
         // ============================
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-links button').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             document.querySelectorAll('.nav-links button').forEach(btn => {
-                if(btn.innerText.toLowerCase().includes(tabId === 'home' ? 'главная' : tabId)) {
-                    btn.classList.add('active');
-                }
+                if(btn.innerText.toLowerCase().includes(tabId === 'home' ? 'главная' : tabId)) btn.classList.add('active');
             });
         }
 
         // ============================
-        // 2. TimIDE (Запуск кода)
+        // 3. КОПИРОВАНИЕ ИЗ FRAMEWORK В IDE
         // ============================
-        let outputElem = document.getElementById('outputArea');
-        function clearOutput() { outputElem.innerText = "⏳ Готов к работе...\n"; }
-        function print(...args) { outputElem.innerText += args.join(" ") + "\n"; }
+        function copyToIDE(code) {
+            switchTab('ide');
+            const ta = document.getElementById('codeArea');
+            ta.value = code;
+            clearOutput('outputArea');
+        }
+
+        // ============================
+        // 4. ЗАПУСК КОДА
+        // ============================
+        function clearOutput(outputId) { document.getElementById(outputId).innerText = "⏳ Готов к работе...\n"; }
+        function print(outputId, ...args) { document.getElementById(outputId).innerText += args.join(" ") + "\n"; }
 
         class TimLangJS {
             constructor() { this.vars = {}; this.funcs = {}; }
@@ -236,9 +308,15 @@ say("x =", x)</textarea>
                     return result;
                 }
                 try {
+                    // Точная математика через умножение на 10^10
                     if (expr.includes('+')) {
                         let parts = expr.split('+').map(p => this.evalExpr(p.trim()));
-                        return parts.reduce((a, b) => a + b, "");
+                        let factor = 10000000000;
+                        let total = 0;
+                        for (let p of parts) {
+                            total += Math.round(p * factor);
+                        }
+                        return total / factor;
                     }
                     let env = this.vars; let keys = Object.keys(env); let values = keys.map(k => env[k]);
                     let func = new Function(...keys, `return (${expr})`);
@@ -249,29 +327,31 @@ say("x =", x)</textarea>
             execLine(line) {
                 line = line.trim(); if (!line) return null;
                 let sayMatch = line.match(/say\(([^)]*)\)/);
-                if (sayMatch) { let args = sayMatch[1].split(',').map(a => this.evalExpr(a.trim())); print(...args); return null; }
+                if (sayMatch) { let args = sayMatch[1].split(',').map(a => this.evalExpr(a.trim())); return { type: 'say', args: args }; }
                 let setMatch = line.match(/set\s+(\w+)\s*=\s*(.*)/);
                 if (setMatch) { this.vars[setMatch[1]] = this.evalExpr(setMatch[2]); return null; }
                 let retMatch = line.match(/return\s+(.*)/);
-                if (retMatch) { return { return: true, value: this.evalExpr(retMatch[1]) }; }
-                if (line.startsWith('if ')) { let cond = line.slice(3).trim(); return { if: this.evalExpr(cond) }; }
+                if (retMatch) { return { type: 'return', value: this.evalExpr(retMatch[1]) }; }
+                if (line.startsWith('if ')) { let cond = line.slice(3).trim(); return { type: 'if', cond: this.evalExpr(cond) }; }
                 let loopMatch = line.match(/loop\s+\w+\s+(\w+)\s+in\s+(\d+)\.\.\.(\d+)/);
-                if (loopMatch) { return { loop: { var: loopMatch[1], start: parseInt(loopMatch[2]), end: parseInt(loopMatch[3]) } }; }
+                if (loopMatch) { return { type: 'loop', var: loopMatch[1], start: parseInt(loopMatch[2]), end: parseInt(loopMatch[3]) }; }
                 return null;
             }
-            execute(code) {
+            execute(code, outputId) {
                 let lines = this.parse(code); let i = 0;
                 while (i < lines.length) {
                     let line = lines[i]; let result = this.execLine(line);
-                    if (result && result.if !== undefined) {
-                        let cond = result.if; i++; let trueBlock = []; let depth = 1;
+                    if (result && result.type === 'say') { print(outputId, ...result.args); }
+                    else if (result && result.type === 'return') { return result.value; }
+                    else if (result && result.type === 'if') {
+                        let cond = result.cond; i++; let trueBlock = []; let depth = 1;
                         while (i < lines.length && depth > 0) {
                             if (lines[i].includes('{')) depth++;
                             if (lines[i].includes('}')) depth--;
                             if (depth > 0) trueBlock.push(lines[i]);
                             i++;
                         }
-                        if (cond) { for (let l of trueBlock) this.execLine(l); }
+                        if (cond) { for (let l of trueBlock) { let r = this.execLine(l); if(r && r.type === 'say') print(outputId, ...r.args); } }
                         else {
                             let foundElse = false;
                             while (i < lines.length && !foundElse) {
@@ -283,15 +363,15 @@ say("x =", x)</textarea>
                                         if (depth > 0) elseBlock.push(lines[i]);
                                         i++;
                                     }
-                                    for (let l of elseBlock) this.execLine(l);
+                                    for (let l of elseBlock) { let r = this.execLine(l); if(r && r.type === 'say') print(outputId, ...r.args); }
                                     foundElse = true;
                                 } else { i++; }
                             }
                         }
                         continue;
                     }
-                    if (result && result.loop) {
-                        let loopInfo = result.loop; i++; let body = []; let depth = 1;
+                    else if (result && result.type === 'loop') {
+                        let loopInfo = result; i++; let body = []; let depth = 1;
                         while (i < lines.length && depth > 0) {
                             if (lines[i].includes('{')) depth++;
                             if (lines[i].includes('}')) depth--;
@@ -300,7 +380,7 @@ say("x =", x)</textarea>
                         }
                         for (let val = loopInfo.start; val <= loopInfo.end; val++) {
                             this.vars[loopInfo.var] = val;
-                            for (let l of body) this.execLine(l);
+                            for (let l of body) { let r = this.execLine(l); if(r && r.type === 'say') print(outputId, ...r.args); }
                         }
                         continue;
                     }
@@ -309,36 +389,72 @@ say("x =", x)</textarea>
             }
         }
 
-        function runCode() {
-            clearOutput();
-            let code = document.getElementById('codeArea').value;
+        function runCode(codeId, outputId) {
+            clearOutput(outputId);
+            let code = document.getElementById(codeId).value;
             let interpreter = new TimLangJS();
             try {
-                interpreter.execute(code);
+                interpreter.execute(code, outputId);
             } catch (e) {
-                print("❌ Ошибка выполнения:", e.message);
+                print(outputId, "❌ Ошибка выполнения:", e.message);
             }
         }
 
         // ============================
-        // 3. TimLearning (Уроки)
+        // 5. УЛУЧШЕНИЯ РЕДАКТОРА (Tab)
+        // ============================
+        function setupEditor(taId) {
+            const ta = document.getElementById(taId);
+            ta.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 4;
+                }
+            });
+        }
+        setupEditor('codeArea');
+        setupEditor('learnCodeArea');
+
+        // ============================
+        // 6. УРОКИ (TimLearning)
         // ============================
         const lessons = [
-            { id: 0, title: "Введение", desc: "Первый запуск", theory: "TimLang — это язык программирования с простым синтаксисом. Команда <b>say()</b> выводит текст на экран.", code: `say("Привет, мир!")
-say("Это мой первый код на TimLang!")`, task: "Измени текст в кавычках на своё имя и запусти!" },
-            { id: 1, title: "Переменные", desc: "Храним данные", theory: "Команда <b>set</b> создаёт переменную. Например: <b>set x = 10</b>", code: `set имя = "Тим"
+            { id: 0, title: "Введение", desc: "Первый запуск", theory: "Команда <b>say()</b> выводит текст на экран.", code: `say("Привет, мир!")
+say("Это мой первый код!")`, task: "Измени текст в кавычках на своё имя и запусти!" },
+            { id: 1, title: "Переменные", desc: "Храним данные", theory: "Команда <b>set</b> создаёт переменную.", code: `set имя = "Тим"
 set возраст = 10
 say("Меня зовут", имя)
 say("Мне", возраст, "лет")`, task: "Создай переменную 'город' и выведи её на экран." },
-            { id: 2, title: "Математика", desc: "Считаем точно", theory: "TimLang использует точную математику. 0.1 + 0.2 = 0.3 без ошибок!", code: `set a = 0.1
+            { id: 2, title: "Математика", desc: "Считаем точно", theory: "0.1 + 0.2 = 0.3 без ошибок!", code: `set a = 0.1
 set b = 0.2
 set c = a + b
 say("0.1 + 0.2 =", c)`, task: "Посчитай 0.5 + 0.3 и выведи результат." },
-            { id: 3, title: "Функции", desc: "Свои команды", theory: "Ключевое слово <b>fn</b> создаёт функцию. Она может принимать параметры.", code: `fn greet(name) {
+            { id: 3, title: "Функции", desc: "Свои команды", theory: "Ключевое слово <b>fn</b> создаёт функцию.", code: `fn greet(name) {
     say("Привет, " + name + "!")
 }
 greet("Тим")
-greet("Ричард")`, task: "Добавь вызов greet('Кот') в конце кода." }
+greet("Ричард")`, task: "Добавь вызов greet('Кот') в конце кода." },
+            { id: 4, title: "Циклы", desc: "Повторяем", theory: "Цикл <b>loop</b> выполняет блок кода несколько раз.", code: `loop счетчик i in 1...5 {
+    say("Номер i =", i)
+}`, task: "Измени диапазон на 1...10 и посмотри, что будет." },
+            { id: 5, title: "Условия", desc: "Принимаем решения", theory: "Конструкция <b>if</b> проверяет условие.", code: `set возраст = 18
+if возраст >= 18 {
+    say("Ты совершеннолетний!")
+} else {
+    say("Ты ещё юн!")
+}`, task: "Измени возраст на 16 и запусти." },
+            { id: 6, title: "Массивы", desc: "Списки данных", theory: "Массив — это список значений. Пример: <b>set arr = [1, 2, 3]</b>. Доступ по индексу <b>arr[0]</b>.", code: `set список = ["яблоко", "банан", "апельсин"]
+say("Первый фрукт:", список[0])
+say("Второй фрукт:", список[1])`, task: "Выведи третий фрукт из списка (индекс 2)." },
+            { id: 7, title: "Вложенные циклы", desc: "Цикл внутри цикла", theory: "Внутри одного <b>loop</b> можно использовать другой <b>loop</b> для создания таблиц или узоров.", code: `loop i in 1...3 {
+    say("Строка", i)
+    loop j in 1...2 {
+        say("  Столбец", j)
+    }
+}`, task: "Измени внутренний цикл на j in 1...4 и посмотри, что будет." }
         ];
 
         let currentLessonId = 0;
@@ -364,14 +480,15 @@ greet("Ричард")`, task: "Добавь вызов greet('Кот') в кон
                 <p>${lesson.theory}</p>
                 <div class="task">📝 Задание: ${lesson.task}</div>
             `;
-            document.getElementById('learnCodeBlock').innerText = lesson.code;
+            document.getElementById('learnCodeArea').value = lesson.code;
+            clearOutput('learnOutputArea');
         }
 
         function prevLesson() { if (currentLessonId > 0) loadLesson(currentLessonId - 1); }
         function nextLesson() { if (currentLessonId < lessons.length - 1) loadLesson(currentLessonId + 1); }
 
         // ============================
-        // 4. ЗАПУСК
+        // 7. ЗАПУСК
         // ============================
         window.onload = function() {
             loadLesson(0);
