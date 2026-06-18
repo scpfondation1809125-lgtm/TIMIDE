@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍑 TimIDE Online</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #1e1e1e; color: #d4d4d4; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        .header { background: #333; padding: 10px 20px; display: flex; align-items: center; border-bottom: 2px solid #555; }
+        .header h1 { margin: 0; font-size: 20px; color: #ff9f43; }
+        .header button { margin-left: 20px; padding: 8px 20px; background: #28a745; border: none; color: white; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        .header button:hover { background: #218838; }
+        .container { display: flex; flex: 1; flex-direction: column; padding: 10px; gap: 10px; }
+        textarea { flex: 1; background: #1e1e1e; color: #d4d4d4; border: 1px solid #444; padding: 10px; font-size: 14px; resize: none; font-family: 'Courier New', monospace; outline: none; }
+        .output { flex: 1; background: #1e1e1e; color: #d4d4d4; border: 1px solid #444; padding: 10px; font-size: 14px; overflow-y: auto; white-space: pre-wrap; }
+        .error { color: #f14c4c; }
+        .success { color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍑 TimIDE Online</h1>
+        <button onclick="runCode()">▶ Запустить</button>
+        <button onclick="clearOutput()" style="background: #dc3545; margin-left: 10px;">Очистить</button>
+    </div>
+    <div class="container">
+        <textarea id="codeArea" placeholder="Напишите код на TimLang...
+fn sum(a, b) {
+    return a + b
+}
+set x = 10
+say("x =", x)">fn greet(name) {
+    say("Привет, " + name + "!")
+}
+set x = 5
+say("Квадрат x =", x * x)</textarea>
+        <div class="output" id="outputArea">⏳ Готов к работе...</div>
+    </div>
+
+    <script>
+        // ============================
+        // TimLang Interpreter (JS)
+        // ============================
+        let outputElem = document.getElementById('outputArea');
+        
+        function print(...args) {
+            outputElem.innerText += args.join(" ") + "\n";
+        }
+
+        function clearOutput() {
+            outputElem.innerText = "⏳ Готов к работе...\n";
+        }
+
+        // Парсер и Исполнитель (упрощенная версия AST для браузера)
+        class TimLangJS {
+            constructor() {
+                this.vars = {};
+                this.funcs = {};
+            }
+
+            parse(code) {
+                let lines = code.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('//'));
+                let ast = [];
+                let i = 0;
+                while (i < lines.length) {
+                    let line = lines[i];
+                    if (line.startsWith('fn ')) {
+                        let match = line.match(/fn\s+(\w+)\(([^)]*)\)\s*\{/);
+                        let name = match[1];
+                        let params = match[2].split(',').map(p => p.trim()).filter(p => p);
+                        let body = [];
+                        i++;
+                        let depth = 1;
+                        while (i < lines.length && depth > 0) {
+                            if (lines[i].includes('{')) depth++;
+                            if (lines[i].includes('}')) depth--;
+                            if (depth > 0) body.push(lines[i]);
+                            i++;
+                        }
+                        this.funcs[name] = { params, body };
+                        continue;
+                    }
+                    ast.push(line);
+                    i++;
+                }
+                return ast;
+            }
+
+            evalExpr(expr) {
+                expr = expr.trim();
+                if (!expr) return "";
+                if (expr.startsWith('"') && expr.endsWith('"')) return expr.slice(1, -1);
+                if (!isNaN(expr)) return parseFloat(expr);
+                if (this.vars[expr] !== undefined) return this.vars[expr];
+
+                // Функции
+                let funcMatch = expr.match(/(\w+)\(([^)]*)\)/);
+                if (funcMatch && this.funcs[funcMatch[1]]) {
+                    let name = funcMatch[1];
+                    let args = funcMatch[2].split(',').map(a => this.evalExpr(a.trim()));
+                    let oldVars = { ...this.vars };
+                    let func = this.funcs[name];
+                    func.params.forEach((p, idx) => this.vars[p] = args[idx] || 0);
+                    
+                    let result = null;
+                    for (let line of func.body) {
+                        let res = this.execLine(line);
+                        if (res && res.return) {
+                            result = res.value;
+                            break;
+                        }
+                    }
+                    this.vars = oldVars;
+                    return result;
+                }
+
+                // Арифметика
+                try {
+                    // Обработка сложения строк и чисел
+                    if (expr.includes('+')) {
+                        let parts = expr.split('+').map(p => this.evalExpr(p.trim()));
+                        return parts.reduce((a, b) => a + b, "");
+                    }
+                    // Просто eval для математики
+                    let env = this.vars;
+                    let keys = Object.keys(env);
+                    let values = keys.map(k => env[k]);
+                    let func = new Function(...keys, `return (${expr})`);
+                    let result = func(...values);
+                    return result;
+                } catch { return expr; }
+            }
+
+            execLine(line) {
+                line = line.trim();
+                if (!line) return null;
+                
+                // say
+                let sayMatch = line.match(/say\(([^)]*)\)/);
+                if (sayMatch) {
+                    let args = sayMatch[1].split(',').map(a => this.evalExpr(a.trim()));
+                    print(...args);
+                    return null;
+                }
+
+                // set
+                let setMatch = line.match(/set\s+(\w+)\s*=\s*(.*)/);
+                if (setMatch) {
+                    this.vars[setMatch[1]] = this.evalExpr(setMatch[2]);
+                    return null;
+                }
+
+                // return
+                let retMatch = line.match(/return\s+(.*)/);
+                if (retMatch) {
+                    return { return: true, value: this.evalExpr(retMatch[1]) };
+                }
+
+                // if
+                if (line.startsWith('if ')) {
+                    let cond = line.slice(3).trim();
+                    // Этот упрощенный парсер работает только для if на одной строке с {}
+                    return { if: this.evalExpr(cond) };
+                }
+
+                // loop (упрощенно)
+                let loopMatch = line.match(/loop\s+\w+\s+(\w+)\s+in\s+(\d+)\.\.\.(\d+)/);
+                if (loopMatch) {
+                    return { loop: { var: loopMatch[1], start: parseInt(loopMatch[2]), end: parseInt(loopMatch[3]) } };
+                }
+
+                return null;
+            }
+
+            execute(code) {
+                let lines = this.parse(code);
+                let i = 0;
+                while (i < lines.length) {
+                    let line = lines[i];
+                    let result = this.execLine(line);
+                    if (result && result.if !== undefined) {
+                        let cond = result.if;
+                        i++;
+                        let trueBlock = [];
+                        let depth = 1;
+                        while (i < lines.length && depth > 0) {
+                            if (lines[i].includes('{')) depth++;
+                            if (lines[i].includes('}')) depth--;
+                            if (depth > 0) trueBlock.push(lines[i]);
+                            i++;
+                        }
+                        if (cond) {
+                            for (let l of trueBlock) this.execLine(l);
+                        } else {
+                            // Ищем else
+                            let foundElse = false;
+                            while (i < lines.length && !foundElse) {
+                                if (lines[i].trim().startsWith('else')) {
+                                    i++;
+                                    depth = 1;
+                                    let elseBlock = [];
+                                    while (i < lines.length && depth > 0) {
+                                        if (lines[i].includes('{')) depth++;
+                                        if (lines[i].includes('}')) depth--;
+                                        if (depth > 0) elseBlock.push(lines[i]);
+                                        i++;
+                                    }
+                                    for (let l of elseBlock) this.execLine(l);
+                                    foundElse = true;
+                                } else { i++; }
+                            }
+                        }
+                        continue;
+                    }
+                    if (result && result.loop) {
+                        let loopInfo = result.loop;
+                        i++;
+                        let body = [];
+                        let depth = 1;
+                        while (i < lines.length && depth > 0) {
+                            if (lines[i].includes('{')) depth++;
+                            if (lines[i].includes('}')) depth--;
+                            if (depth > 0) body.push(lines[i]);
+                            i++;
+                        }
+                        for (let val = loopInfo.start; val <= loopInfo.end; val++) {
+                            this.vars[loopInfo.var] = val;
+                            for (let l of body) this.execLine(l);
+                        }
+                        continue;
+                    }
+                    i++;
+                }
+            }
+        }
+
+        function runCode() {
+            clearOutput();
+            let code = document.getElementById('codeArea').value;
+            let interpreter = new TimLangJS();
+            try {
+                interpreter.execute(code);
+            } catch (e) {
+                print("❌ Ошибка выполнения:", e.message);
+            }
+        }
+    </script>
+</body>
+</html>
